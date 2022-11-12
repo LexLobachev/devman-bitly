@@ -1,46 +1,47 @@
 from decouple import config
-
 import requests
-from urllib.parse import urlparse
 
 
 def shorten_link(token, url):
-    shortening_url = 'https://api-ssl.bitly.com/v4/bitlinks'
-    long_url = url
+    api_endpoint = 'https://api-ssl.bitly.com/v4/bitlinks'
     headers = {
         "Authorization": f"Bearer {token}"
     }
-    data = {"long_url": long_url}
-    response = requests.post(shortening_url, headers=headers, json=data)
+    long_url = {"long_url": url}
+    response = requests.post(api_endpoint, headers=headers, json=long_url)
     response.raise_for_status()
-    bitlink = response.json()['link'].split('//')[-1]
+    bitlink = response.json()['id']
     return bitlink
 
 
 def count_clicks(token, bitlink):
-    summary_url = f'https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary'
+    api_endpoint = f'https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary'
     headers = {
         "Authorization": f"Bearer {token}"
     }
-    response = requests.get(summary_url, headers=headers)
+    response = requests.get(api_endpoint, headers=headers)
     response.raise_for_status()
     total_clicks = response.json()['total_clicks']
     return total_clicks
 
 
-def is_bitlink(url):
-    parsed = urlparse(url)
-    it_is_bitlink = True
-    if parsed.scheme != '':
-        it_is_bitlink = False
+def is_bitlink(token, url):
+    api_endpoint = f'https://api-ssl.bitly.com/v4/bitlinks/{url}'
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    response = requests.get(api_endpoint, headers=headers)
+    it_is_bitlink = False
+    if response.ok:
+        it_is_bitlink = True
     return it_is_bitlink
 
 
 if __name__ == "__main__":
-    token = config('TOKEN')
+    token = config('BITLY_AUTH_TOKEN')
     user_input = input()
     try:
-        if is_bitlink(user_input):
+        if is_bitlink(token, user_input):
             sum_of_clicks = count_clicks(token, user_input)
             print('Количество кликов:', sum_of_clicks)
         else:
