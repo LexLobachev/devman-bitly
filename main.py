@@ -31,10 +31,7 @@ def is_bitlink(token, url):
         "Authorization": f"Bearer {token}"
     }
     response = requests.get(api_endpoint, headers=headers)
-    it_is_bitlink = False
-    if response.ok:
-        it_is_bitlink = True
-    return it_is_bitlink
+    return response.ok
 
 
 if __name__ == "__main__":
