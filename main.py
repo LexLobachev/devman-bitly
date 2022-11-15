@@ -1,5 +1,12 @@
 from decouple import config
 import requests
+import argparse
+
+parser = argparse.ArgumentParser(
+    description='Сокращает ссылку или выдает количество переходов по сокращенной ссылке'
+)
+parser.add_argument('link', help='your_link')
+args = parser.parse_args()
 
 
 def shorten_link(token, url):
@@ -36,7 +43,7 @@ def is_bitlink(token, url):
 
 if __name__ == "__main__":
     token = config('BITLY_AUTH_TOKEN')
-    user_input = input()
+    user_input = args.link
     try:
         if is_bitlink(token, user_input):
             sum_of_clicks = count_clicks(token, user_input)

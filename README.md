@@ -9,12 +9,12 @@
 mkdir devman-bitly && cd devman-bitly
 python3 -m venv venv
 pip install -r requirements.txt
-python3 main.py
+python3 main.py ВАША_ССЫЛКА
 ```
 
 ## shorten_link
 ```
-https://www.youtube.com/
+python3 main.py https://www.youtube.com/
 Битлинк bit.ly/3En2LWy
 ```
 
@@ -23,7 +23,7 @@ https://www.youtube.com/
 
 ## count_clicks
 ```
-bit.ly/3En2LWy
+python3 main.py bit.ly/3En2LWy
 Количество кликов: 3
 ```
 Приниимает на вход токен авторизации на сервис bitly.com, а также сокращенную ссылку, по которой необходимо посчитать количество переходов.
